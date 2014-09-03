@@ -4,11 +4,20 @@
   "author": "Wil Asche <wil@asche.us>",
   "homepage": "http://github.com/wasche/node-easy-config",
   "license": "MIT",
+  "main": "./Config.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/wasche/node-easy-config.git"
   },
   "dependencies": {
     "underscore": "^1.7.0"
+  },
+  "devDependencies": {
+    "assert": "^1.1.2",
+    "mocha": "^1.21.4",
+    "tmp": "0.0.24"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }

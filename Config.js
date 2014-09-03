@@ -16,6 +16,8 @@ Config.prototype.path = function(path){
 
   if ('user' === path.slice(0,4)){
     this.filename = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + path.slice(4);
+  } else {
+    this.filename = path;
   }
 
   return this;
@@ -26,7 +28,7 @@ Config.prototype.load = function(callback){
     var self = this;
     fs.readFile(this.filename, fsOptions, function(err, data){
       if (err){ throw err; }
-      callback(self.load(JSON.parse(str)));
+      callback(self.load(JSON.parse(data)));
     });
   } else if (typeof callback === 'string'){
     this.path(callback);
@@ -35,7 +37,8 @@ Config.prototype.load = function(callback){
     this.data = _.extend(this.data, callback);
   } else {
     var str = fs.readFileSync(this.filename, fsOptions);
-    this.load(JSON.parse(str));
+    var json = JSON.parse(str);
+    this.load(json);
   }
   return this;
 };
@@ -46,9 +49,11 @@ Config.prototype.get = function(key){
 
 Config.prototype.set = function(key, value){
   this.data[key] = value;
+  return this;
 };
 
 Config.prototype.rm = function(key){
+  delete this.data[key];
   return this;
 };
 
@@ -68,11 +73,11 @@ Config.prototype.save = function(path, callback){
 };
 
 Config.prototype.json = function(){
-  return this.data;
+  return _.clone(this.data);
 };
 
-Config.create = function(path){
-  return new Config(path).load();
+Config.create = function(path, defaults){
+  return new Config(path, defaults).load();
 };
 
 Config.read = function(path, defaults){
