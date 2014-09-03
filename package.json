@@ -1,0 +1,14 @@
+{
+  "name": "easy-config",
+  "version": "0.0.1",
+  "author": "Wil Asche <wil@asche.us>",
+  "homepage": "http://github.com/wasche/node-easy-config",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/wasche/node-easy-config.git"
+  },
+  "dependencies": {
+    "underscore": "^1.7.0"
+  }
+}
