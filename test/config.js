@@ -54,6 +54,12 @@ describe('Config', function(){
       assert.equal(3, cfg.data.a);
     });
 
+    it('should handle delimited keys', function(){
+      var cfg = new Config(null, {a: {b: 1}});
+      cfg.set('a.b', 2);
+      assert.equal(2, cfg.data.a.b);
+    });
+
   });
   
   describe('#rm()', function(){
@@ -62,6 +68,12 @@ describe('Config', function(){
       var cfg = new Config(null, {a: 1, b: 2});
       cfg.rm('a');
       assert.ok(!cfg.data.a);
+    });
+
+    it('should handle delimited keys', function(){
+      var cfg = new Config(null, {a: {b: 1}});
+      cfg.rm('a.b');
+      assert.ok(!cfg.data.a.b);
     });
 
   });
@@ -154,6 +166,17 @@ describe('Config', function(){
       });
     });
 
+    it('should handle callback only', function(done){
+      tmp.tmpName(function(err, path){
+        var cfg = new Config(path, {a: 1, b:2 });
+        assert.doesNotThrow(function(){
+          cfg.save(function(c){
+            done();
+          });
+        });
+      });
+    });
+
   });
   
   describe('.create()', function(){
@@ -165,6 +188,10 @@ describe('Config', function(){
 
   });
   
-  describe('.read()', function(){});
+  describe('.read()', function(){
+
+    // TODO
+
+  });
 
 });

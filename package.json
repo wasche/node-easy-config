@@ -1,5 +1,5 @@
 {
-  "name": "easy-config",
+  "name": "easy-config-json",
   "version": "0.0.1",
   "author": "Wil Asche <wil@asche.us>",
   "homepage": "http://github.com/wasche/node-easy-config",
@@ -18,6 +18,6 @@
     "tmp": "0.0.24"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "./node_modules/mocha/bin/mocha"
   }
 }
