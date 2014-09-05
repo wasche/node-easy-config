@@ -1,10 +1,20 @@
+module.exports = (function(undefined){
 'use strict';
 
 var _ = require('underscore');
 var fs = require('fs');
 var fsOptions = {encoding: 'utf-8'};
 
+function dive(obj, path){
+  while (path.length){ obj = obj[path.shift()]; }
+  return obj;
+}
+
 var Config = function(path, defaults){
+  if (defaults === undefined && typeof path === 'object'){
+    path = null;
+    defaults = path;
+  }
   this.data = _.extend({}, defaults);
   path && this.path(path);
 };
@@ -14,7 +24,7 @@ Config.prototype.path = function(path){
     return this.filename;
   }
 
-  if ('user' === path.slice(0,4)){
+  if ('~' === path.slice(0,4)){
     this.filename = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + path.slice(4);
   } else {
     this.filename = path;
@@ -48,16 +58,32 @@ Config.prototype.get = function(key){
 };
 
 Config.prototype.set = function(key, value){
-  this.data[key] = value;
+  var o = this.data;
+  if (key.indexOf('.') > 0){
+    var path = key.split('.');
+    key = path.pop();
+    o = dive(o, path);
+  }
+  o[key] = value;
   return this;
 };
 
 Config.prototype.rm = function(key){
-  delete this.data[key];
+  var o = this.data;
+  if (key.indexOf('.') > 0){
+    var path = key.split('.');
+    key = path.pop();
+    o = dive(o, path);
+  }
+  delete o[key];
   return this;
 };
 
 Config.prototype.save = function(path, callback){
+  if (callback === undefined && typeof path === 'function'){
+    callback = path;
+    path = null;
+  }
   var str = JSON.stringify(this.data, null, 2);
   path && this.path(path);
   if (typeof callback === 'function'){
@@ -84,4 +110,5 @@ Config.read = function(path, defaults){
   return new Config(path, defaults).load().json();
 };
 
-module.exports = Config;
+return Config;
+}());
