@@ -1,4 +1,8 @@
+## Installation
 
+```
+npm install easy-config-json
+```
 
 ## Usage
 
